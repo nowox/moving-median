@@ -20,19 +20,22 @@ void median(float input, MedianData *data, float *median, float *min, float *max
 	data->oldest->value = input;
 	data->oldest = data->oldest->parent;
 
-	qsort(data->sorted, sizeof(data->sorted) / sizeof(data->sorted[0]), 
-		sizeof(data->sorted[0]), comp);
+	qsort(data->sorted, data->length, sizeof(data->sorted[0]), comp);
 	
 	*min = (*data->sorted[0]).value;
-	*max = (*data->sorted[N - 1]).value;
-	*median = (*data->sorted[N / 2]).value;
+	*max = (*data->sorted[data->length - 1]).value;
+	*median = (*data->sorted[data->length / 2]).value;
 }
 
-void median_init(MedianData* data) 
+void median_init(MedianData* data, struct Node *nodes, struct Node **sorted, size_t length)
 {
-	data->oldest = &data->nodes[N - 1];
+	data->nodes = nodes; 
+	data->sorted = sorted; 
+	data->length = length; 
 
-	for (size_t i = 0; i < N; data->oldest = &data->nodes[i], i++) {
+	data->oldest = &data->nodes[length - 1];
+
+	for (size_t i = 0; i < length; data->oldest = &data->nodes[i], i++) {
 		data->nodes[i] = (struct Node) {.value = 0, .parent = data->oldest};
 		data->sorted[i] = &data->nodes[i]; 		 
 	}

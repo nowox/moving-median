@@ -4,18 +4,21 @@
 void print_memory(MedianData *data)
 {
 	printf("[ ");
-	for (size_t i = 0; i < N; i++) {
+	for (size_t i = 0; i < data->length; i++) {
 		printf("%d ", (int)data->sorted[i]->value);
 	}
 	putchar(']');
 }
 
+#define LENGTH  (5)
 int main(void) 
 {
 	int input[] = { 3, 1, 6, 5, 7, 8, 9, 0, 1 };
 	MedianData data = { 0 };
 
-	median_init(&data);
+	struct Node nodes[LENGTH];
+	struct Node *sorted[LENGTH];
+	median_init(&data, nodes, sorted, LENGTH);
 
 	for (size_t i = 0; i < sizeof(input) / sizeof(input[0]); i++) {
 		float min, mid, max;
