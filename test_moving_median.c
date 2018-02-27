@@ -5,7 +5,7 @@ void print_memory(MedianData *data)
 {
 	printf("[ ");
 	for (size_t i = 0; i < N; i++) {
-		printf("%d ", (int)data->buffer[i].value);
+		printf("%d ", (int)data->sorted[i]->value);
 	}
 	putchar(']');
 }

@@ -7,21 +7,13 @@
 
 struct Node {
 	float value;
-	size_t index; 
-	union {
-		struct {
-			struct Node* prev;
-			struct Node* next;
-		};
-		struct family {
-			struct Node* family[2];
-		} family;
-	};
+	struct Node* parent;
 };
 
 typedef struct MedianData {
-	struct Node* oldest;
-	struct Node buffer[N];
+	struct Node *oldest;
+	struct Node nodes[N];
+	struct Node *sorted[N];
 } MedianData;
 
 void median_init(MedianData* data);
