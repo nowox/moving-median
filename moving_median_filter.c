@@ -27,11 +27,12 @@ void median(float input, MedianData *data, float *median, float *min, float *max
 	*median = (*data->sorted[data->length / 2]).value;
 }
 
-void median_init(MedianData* data, struct Node *nodes, struct Node **sorted, size_t length)
+MedianData* median_create(size_t length)
 {
-	data->nodes = nodes; 
-	data->sorted = sorted; 
-	data->length = length; 
+	MedianData *data = malloc(sizeof(MedianData));
+	data->nodes = malloc(sizeof(struct Node) * length);
+	data->sorted = malloc(sizeof(struct Node*) * length);
+	data->length = length;
 
 	data->oldest = &data->nodes[length - 1];
 
@@ -39,4 +40,12 @@ void median_init(MedianData* data, struct Node *nodes, struct Node **sorted, siz
 		data->nodes[i] = (struct Node) {.value = 0, .parent = data->oldest};
 		data->sorted[i] = &data->nodes[i]; 		 
 	}
+	return data;
+}
+
+void median_destroy(MedianData *data)
+{
+	free(data->sorted);
+	free(data->nodes);
+	free(data);
 }

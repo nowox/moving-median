@@ -16,5 +16,6 @@ typedef struct MedianData {
 	size_t length; // Number of nodes
 } MedianData;
 
-void median_init(MedianData* data, struct Node *nodes, struct Node **sorted, size_t length);
+MedianData* median_create(size_t length);
+void median_destroy(MedianData* data);
 void median(float input, MedianData *data, float *median, float *min, float *max);
