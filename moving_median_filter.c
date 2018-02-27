@@ -26,7 +26,7 @@ void median(float input, MedianData *data, float *median, float *min, float *max
 		swap(n, &data->sorted[n->index + 1]->value);
 		n = &data->sorted[n->index + 1]->value;
 	}
-	while (n->index > 0 && n->value > data->sorted[n->index - 1]->value) {
+	while (n->index > 0 && n->value < data->sorted[n->index - 1]->value) {
 		swap(n, &data->sorted[n->index - 1]->value);
 		n = &data->sorted[n->index - 1]->value;
 	}
