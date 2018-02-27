@@ -11,8 +11,8 @@ struct Node {
 
 typedef struct MedianData {
 	struct Node *nodes;
-	struct Node *oldest;
 	struct Node **sorted;
+	size_t oldest;
 	size_t length; // Number of nodes
 } MedianData;
 

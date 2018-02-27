@@ -6,22 +6,31 @@
 #include <stdlib.h>
 #include "moving_median_filter.h"
 
-int comp(const struct Node **a, const struct Node **b) 
+void swap(struct Node *a, struct Node *b) 
 {
-	if ((*a)->value > (*b)->value)
-		return 1;
-	if ((*a)->value < (*b)->value)
-		return -1;
-	return 0;
+	struct Node node = *a;
+	*a = *b;
+	*b = node;
 }
 
 void median(float input, MedianData *data, float *median, float *min, float *max)
 {	
-	data->oldest->value = input;
-	data->oldest = data->oldest->parent;
+	struct Node *n = data->sorted[data->oldest];
+	n->value = input;
+	n = n->parent;
 
-	qsort(data->sorted, data->length, sizeof(data->sorted[0]), comp);
-	
+	size_t index = data->oldest; 
+	while (index < data->length - 1 && 
+		data->sorted[index]->value > data->sorted[index + 1]->value) 
+	{
+		swap(data->sorted[index], data->sorted[index + 1]);
+	}
+	while (index > 0 &&
+		data->sorted[index]->value < data->sorted[index - 1]->value)
+	{
+		swap(data->sorted[index], data->sorted[index - 1]);
+	}
+
 	*min = (*data->sorted[0]).value;
 	*max = (*data->sorted[data->length - 1]).value;
 	*median = (*data->sorted[data->length / 2]).value;
@@ -33,8 +42,7 @@ MedianData* median_create(size_t length)
 	data->nodes = malloc(sizeof(struct Node) * length);
 	data->sorted = malloc(sizeof(struct Node*) * length);
 	data->length = length;
-
-	data->oldest = &data->nodes[length - 1];
+	data->oldest = length / 2;
 
 	for (size_t i = 0; i < length; data->oldest = &data->nodes[i], i++) {
 		data->nodes[i] = (struct Node) {.value = 0, .parent = data->oldest};
