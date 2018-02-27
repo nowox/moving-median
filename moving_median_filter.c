@@ -6,14 +6,15 @@
 #include <stdlib.h>
 #include "moving_median_filter.h"
 
-void swap(struct Node *a, struct Node *b) 
+void swap(struct Node **a, struct Node **b) 
 {
-	struct Node node = *a;
-	size_t index = b->index;
+	struct Node *temp = *a;
+	size_t ia = (*a)->index;
+	size_t ib = (*b)->index; 
 	*a = *b;
-	*b = node;
-	a->index = node.index;
-	b->index = index;
+	*b = temp;
+	(*b)->index = ib; 
+	(*a)->index = ia;
 }
 
 void median(float input, MedianData *data, float *median, float *min, float *max)
@@ -22,13 +23,15 @@ void median(float input, MedianData *data, float *median, float *min, float *max
 	n->value = input;
 	data->oldest = n->parent;
 
-	while (n->index < data->length - 1 && n->value > data->sorted[n->index + 1]->value) {
-		swap(n, &data->sorted[n->index + 1]->value);
-		n = &data->sorted[n->index + 1]->value;
+	size_t i = n->index;
+	while (i < data->length - 1 && data->sorted[i]->value > data->sorted[i + 1]->value) {
+		swap(&data->sorted[i], &data->sorted[i + 1]);
+		i++;
 	}
-	while (n->index > 0 && n->value < data->sorted[n->index - 1]->value) {
-		swap(n, &data->sorted[n->index - 1]->value);
-		n = &data->sorted[n->index - 1]->value;
+	i = n->index;
+	while (i > 0 && data->sorted[i]->value < data->sorted[i - 1]->value) {
+		swap(&data->sorted[i], &data->sorted[i - 1]);
+		i--;
 	}
 
 	*min = (*data->sorted[0]).value;
