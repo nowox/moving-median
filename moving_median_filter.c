@@ -16,25 +16,24 @@ static void swap_node(struct Node* a, struct Node* b)
 	b->index = index; 
 }
 
+int comp(const struct Node *a, const struct Node *b) {
+	if (a->value > b->value)
+		return 1;
+	if (a->value < b->value)
+		return -1;
+	return 0;
+}
+
 void median(float input, MedianData *data, float *median, float *min, float *max)
 {
 	// New value replaces the oldest
 	struct Node* node = data->oldest;
 	node->value = input;
-	data->oldest = data->oldest->prev;
+	data->oldest = data->oldest->next;
 
 	// Sort new values
-	struct Node* walk = node; 
-	while (walk->index < N - 1 && walk->value > data->buffer[walk->index + 1].value) {
-		swap_node(walk, &data->buffer[walk->index + 1]);
-		walk = &data->buffer[walk->index + 1];
-	}
-
-	while (walk->index > 0 && walk->value < data->buffer[walk->index - 1].value) {
-		swap_node(walk, &data->buffer[walk->index - 1]);
-		walk = &data->buffer[walk->index - 1];
-	}
-
+	qsort(data->buffer, sizeof(data->buffer) / sizeof(data->buffer[0]), sizeof(data->buffer[0]), comp);
+	
 	// Fill the output struct
 	*min = data->buffer[0].value;
 	*max = data->buffer[N - 1].value;
