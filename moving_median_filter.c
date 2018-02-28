@@ -6,58 +6,59 @@
 #include <stdlib.h>
 #include "moving_median_filter.h"
 
-void swap(struct Node **a, struct Node **b) 
+static void swap(struct Node **a, struct Node **b) 
 {
+	// Swap two node references in the sorted table.
 	struct Node *temp = *a;
-	size_t ia = (*a)->index;
-	size_t ib = (*b)->index; 
 	*a = *b;
 	*b = temp;
-	(*b)->index = ib; 
-	(*a)->index = ia;
+
+	// Preserve index. Used to retrive the node position in the sorted table.
+	size_t index = (*a)->index;
+	(*a)->index = (*b)->index; 
+	(*b)->index = index;
 }
 
 void median(float input, MedianData *data, float *median, float *min, float *max)
 {	
-	struct Node *n = data->oldest;
-	n->value = input;
-	data->oldest = n->parent;
+	// New value replaces the oldest
+	struct Node *n = data->kernel;
+	struct Node *new_node = data->oldest;
+	new_node->value = input;
+	data->oldest = new_node->parent;
 
-	size_t i = n->index;
-	while (i < data->length - 1 && data->sorted[i]->value > data->sorted[i + 1]->value) {
-		swap(&data->sorted[i], &data->sorted[i + 1]);
+	// Sort the kernel
+	size_t i = new_node->index;
+	while (i < data->length - 1 && n[i].sorted->value > n[i + 1].sorted->value) {
+		swap(&n[i].sorted, &n[i + 1].sorted);
 		i++;
 	}
-	i = n->index;
-	while (i > 0 && data->sorted[i]->value < data->sorted[i - 1]->value) {
-		swap(&data->sorted[i], &data->sorted[i - 1]);
+
+	i = new_node->index;
+	while (i > 0 && n[i].sorted->value < n[i - 1].sorted->value) {
+		swap(&n[i].sorted, &n[i - 1].sorted);
 		i--;
 	}
 
-	*min = (*data->sorted[0]).value;
-	*max = (*data->sorted[data->length - 1]).value;
-	*median = (*data->sorted[data->length / 2]).value;
+	// Get kernel information from sorted entries
+	*min = n[0].sorted->value;
+	*max = n[data->length - 1].sorted->value;
+	*median = n[data->length / 2].sorted->value;
 }
 
-MedianData* median_create(size_t length)
+void median_init(MedianData *data, struct Node *nodes, size_t length)
 {
-	MedianData *data = malloc(sizeof(MedianData));
-	data->nodes = malloc(sizeof(struct Node) * length);
-	data->sorted = malloc(sizeof(struct Node*) * length);
+	data->kernel = nodes;
 	data->length = length;
 
-	data->oldest = &data->nodes[length - 1];
-
-	for (size_t i = 0; i < length; data->oldest = &data->nodes[i], i++) {
-		data->nodes[i] = (struct Node) {.value = 0, .parent = data->oldest, .index = i};
-		data->sorted[i] = &data->nodes[i]; 		 
+	// Linked list initialization
+	data->oldest = &data->kernel[length - 1];
+	for (size_t i = 0; i < length; data->oldest = &data->kernel[i], i++) {
+		data->kernel[i] = (struct Node) {
+			.value = 0, 
+			.parent = data->oldest, 
+			.index = i, 
+			.sorted = &data->kernel[i]
+		}; 		 
 	}
-	return data;
-}
-
-void median_destroy(MedianData *data)
-{
-	free(data->sorted);
-	free(data->nodes);
-	free(data);
 }

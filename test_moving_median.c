@@ -1,11 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "moving_median_filter.h"
 
 void print_memory(MedianData *data)
 {
 	printf("[ ");
 	for (size_t i = 0; i < data->length; i++) {
-		printf("%d ", (int)data->sorted[i]->value);
+		printf("%d ", (int)data->kernel[i].sorted->value);
 	}
 	putchar(']');
 }
@@ -13,7 +14,11 @@ void print_memory(MedianData *data)
 int main(void) 
 {
 	int input[] = { 3, 1, 6, 5, 7, 8, 9, 0, 1 };
-	MedianData *data = median_create(5);
+
+	MedianData data[5];
+	struct Node nodes[5];
+
+	median_init(data, nodes, 5);
 
 	for (size_t i = 0; i < sizeof(input) / sizeof(input[0]); i++) {
 		float min, mid, max;
@@ -24,5 +29,6 @@ int main(void)
 		printf(")\n");
 	}
 	getchar();
-	median_destroy(data);
+
+	return EXIT_SUCCESS;
 }
