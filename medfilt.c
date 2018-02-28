@@ -27,8 +27,9 @@ void medfilt(MedfiltData *data, float input, float *median, float *min, float *m
     node->value = input;
     data->oldest = node->parent;
 
+#   define VAL(x) (n[x].sorted->value)
+
     // Sort the kernel
-    #define VAL(x) (n[x].sorted->value)
     for (size_t i = node->index; i < data->length - 1 && VAL(i) > VAL(i + 1); i++) {
         swap(&n[i].sorted, &n[i + 1].sorted);
     }
@@ -38,9 +39,11 @@ void medfilt(MedfiltData *data, float input, float *median, float *min, float *m
     }
 
     // Get kernel information from sorted entries
-    *min = n[0].sorted->value;
-    *max = n[data->length - 1].sorted->value;
-    *median = n[data->length / 2].sorted->value;
+    *min = VAL(0);
+    *max = VAL(data->length - 1);
+    *median = VAL(data->length / 2);
+
+#   undef VAL
 }
 
 void medfilt_init(MedfiltData *data, MedfiltNode *nodes, float init, size_t length)
