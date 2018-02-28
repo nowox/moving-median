@@ -4,9 +4,9 @@
  */
 #include <stdint.h>
 #include <stdlib.h>
-#include "moving_median_filter.h"
+#include "moving_median.h"
 
-static void swap(Node **a, Node **b) 
+static void swap(Node **a, Node **b)
 {
 	// Swap two node references in the sorted table.
 	Node *temp = *a;
@@ -15,12 +15,12 @@ static void swap(Node **a, Node **b)
 
 	// Preserve index. Used to retrive the node position in the sorted table.
 	size_t index = (*a)->index;
-	(*a)->index = (*b)->index; 
+	(*a)->index = (*b)->index;
 	(*b)->index = index;
 }
 
 void median(float input, MedianData *data, float *median, float *min, float *max)
-{		
+{
 	// New value replaces the oldest
 	Node *n = data->kernel;
 	Node *node = data->oldest;
@@ -52,10 +52,10 @@ void median_init(MedianData *data, Node *nodes, size_t length)
 	data->oldest = &data->kernel[length - 1];
 	for (size_t i = 0; i < length; data->oldest = &data->kernel[i], i++) {
 		data->kernel[i] = (Node) {
-			.value = 0, 
-			.parent = data->oldest, 
-			.index = i, 
+			.value = 0,
+			.parent = data->oldest,
+			.index = i,
 			.sorted = &data->kernel[i]
-		}; 		 
+		};
 	}
 }

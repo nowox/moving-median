@@ -3,7 +3,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "moving_median_filter.h"
+#include "moving_median.h"
 
 static void kernel2str(MedianData *data)
 {
@@ -15,7 +15,7 @@ static void kernel2str(MedianData *data)
 }
 
 static void display(MedianData *data, size_t i, int in, int min, int mid, int max) {
-	printf("%d. %d -> min=%d mid=%d max=%d kernel=", (int)i, in, min, mid, max);
+	printf("u[%d] = %d -> min=%d mid=%d max=%d kernel=", (int)i, in, min, mid, max);
 	kernel2str(data);
 	printf("\n");
 }
@@ -23,18 +23,18 @@ static void display(MedianData *data, size_t i, int in, int min, int mid, int ma
 
 #define KERNEL  (5)
 
-int main(void) 
-{	
+int main(void)
+{
 	const int input[] = { 3, 1, 6, 5, 7, 8, 9, 0, 1 };
-	
-	MedianData data[KERNEL];
+
+	MedianData data;
 	struct Node nodes[KERNEL];
-	median_init(data, nodes, KERNEL); 
+	median_init(&data, nodes, KERNEL);
 
 	for (size_t i = 0; i < sizeof(input) / sizeof(input[0]); i++) {
 		float min, mid, max;
-		median(input[i], data, &mid, &min, &max);
-		display(&data, i, input[i], min, mid, max);
+		median(input[i], &data, &mid, &min, &max);
+		display(&data, i, input[i], (int)min, (int)mid, (int)max);
 	}
 	getchar();
 
