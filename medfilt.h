@@ -22,17 +22,17 @@
 #include <stdlib.h>
 
 typedef struct MedfiltNode {
-	float value;
-	size_t index; // Node index in the sorted table
-	struct MedfiltNode* parent;
-	struct MedfiltNode* sorted;
+    float value;
+    size_t index; // Node index in the sorted table
+    struct MedfiltNode* parent;
+    struct MedfiltNode* sorted;
 } MedfiltNode;
 
 typedef struct MedfiltData {
-	MedfiltNode *kernel; // Working filter memory
-	MedfiltNode *oldest; // Reference to the oldest value in the kernel
-	size_t length; // Number of nodes
+    MedfiltNode *kernel; // Working filter memory
+    MedfiltNode *oldest; // Reference to the oldest value in the kernel
+    size_t length; // Number of nodes
 } MedfiltData;
 
-void median_init(MedfiltData *data, MedfiltNode *nodes, size_t length);
-void median(float input, MedfiltData *data, float *median, float *min, float *max);
+void medfilt_init(MedfiltData *data, MedfiltNode *nodes, size_t length);
+void medfilt(float input, MedfiltData *data, float *median, float *min, float *max);
