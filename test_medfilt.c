@@ -28,11 +28,11 @@ static void display(MedfiltData *data,
 
 int main(void)
 {
-    const float in[] = { 3, 1, 6, 5, 7, 8, 9, 0, 1 };
+    const float in[] = { 3, 1, 4, 1, 5, 9, 2, 6, 5, 3 };
 
     MedfiltData data;
     MedfiltNode nodes[KERNEL];
-    medfilt_init(&data, nodes, NAN, KERNEL);
+    medfilt_init(&data, nodes, KERNEL, NAN);
 
     for (size_t i = 0; i < sizeof(in) / sizeof(in[0]); i++) {
         float min, mid, max;

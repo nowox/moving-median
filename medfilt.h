@@ -34,5 +34,5 @@ typedef struct MedfiltData {
 	size_t length; // Number of nodes
 } MedfiltData;
 
-void medfilt_init(MedfiltData *data, MedfiltNode *nodes, float init, size_t length);
+void medfilt_init(MedfiltData *data, MedfiltNode *nodes, size_t length, float init);
 void medfilt(MedfiltData *data, float input, float *median, float *min, float *max);

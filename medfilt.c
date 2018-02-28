@@ -46,7 +46,7 @@ void medfilt(MedfiltData *data, float input, float *median, float *min, float *m
 #   undef VAL
 }
 
-void medfilt_init(MedfiltData *data, MedfiltNode *nodes, float init, size_t length)
+void medfilt_init(MedfiltData *data, MedfiltNode *nodes, size_t length, float init)
 {
     data->kernel = nodes;
     data->length = length;
