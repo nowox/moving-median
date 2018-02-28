@@ -19,7 +19,7 @@ static void swap(MedfiltNode **a, MedfiltNode **b)
     (*b)->index = index;
 }
 
-void medfilt(float input, MedfiltData *data, float *median, float *min, float *max)
+void medfilt(MedfiltData *data, float input, float *median, float *min, float *max)
 {
     // New value replaces the oldest
     MedfiltNode *n = data->kernel;
@@ -43,7 +43,7 @@ void medfilt(float input, MedfiltData *data, float *median, float *min, float *m
     *median = n[data->length / 2].sorted->value;
 }
 
-void medfilt_init(MedfiltData *data, MedfiltNode *nodes, size_t length)
+void medfilt_init(MedfiltData *data, MedfiltNode *nodes, float init, size_t length)
 {
     data->kernel = nodes;
     data->length = length;
@@ -52,7 +52,7 @@ void medfilt_init(MedfiltData *data, MedfiltNode *nodes, size_t length)
     data->oldest = &data->kernel[length - 1];
     for (size_t i = 0; i < length; i++) {
         data->kernel[i] = (MedfiltNode) {
-            .value = 0,
+            .value = init,
             .parent = data->oldest,
             .index = i,
             .sorted = &data->kernel[i]
