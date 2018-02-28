@@ -20,12 +20,12 @@
 */
 #pragma once
 
-struct Node {
+typedef struct Node {
 	float value;
 	size_t index; // Node index in the sorted table
 	struct Node* parent;
 	struct Node* sorted;
-};
+} Node;
 
 typedef struct MedianData {
 	struct Node *kernel; // Working filter memory
@@ -33,5 +33,5 @@ typedef struct MedianData {
 	size_t length; // Number of nodes
 } MedianData;
 
-void median_init(MedianData *data, struct Node *nodes, size_t length);
+void median_init(MedianData *data, Node *nodes, size_t length);
 void median(float input, MedianData *data, float *median, float *min, float *max);
