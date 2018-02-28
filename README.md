@@ -27,11 +27,13 @@ int main(void)
 }
 ```
 
-The included `test_medfilt` would return: 
+The included `test_medfilt` would return:
 
 ```
 $ make run
 cc -std=c99 -Wall -O2   -c -o test_medfilt.o test_medfilt.c
+cc -std=c99 -Wall -O2   -c -o medfilt.o medfilt.c
+ar rc libmedfilt.a medfilt.o
 cc test_medfilt.o -o test -lmedfilt -L.
 ./test
 u[0] = 3 -> min=-nan mid=-nan max=3 kernel=[ -nan -nan -nan -nan 3 ]
