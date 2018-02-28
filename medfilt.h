@@ -3,12 +3,12 @@
 * @author CHEVALLIER Yves <ycr@csem.ch>
 *
 * This algorithm is iterative. Each call will compute the next point.
-* In the example below, the kernel has a size of 3. Notice that the 
+* In the example below, the kernel has a size of 3. Notice that the
 * values in the kernel are alway sorted. The left value is therefore
 * the minimum in the kernel, the center value is the median and the
-* right value is the maximum value. 
+* right value is the maximum value.
 *
-* Input data:         0 1 2 5 4 8 3 
+* Input data:         0 1 2 5 4 8 3
 * Kernel:      |0 0 0|            .   (min=0, med=0, max=0)
 *                |0 0 0|          .   (min=0, med=0, max=0)
 *                  |0 0 1|        .   (min=0, med=0, max=1)
@@ -19,19 +19,20 @@
 *                            |3 4 8|  (min=3, med=4, max=8)
 */
 #pragma once
+#include <stdlib.h>
 
-typedef struct Node {
+typedef struct MedfiltNode {
 	float value;
 	size_t index; // Node index in the sorted table
-	struct Node* parent;
-	struct Node* sorted;
-} Node;
+	struct MedfiltNode* parent;
+	struct MedfiltNode* sorted;
+} MedfiltNode;
 
-typedef struct MedianData {
-	struct Node *kernel; // Working filter memory
-	struct Node *oldest; // Reference to the oldest value in the kernel
+typedef struct MedfiltData {
+	MedfiltNode *kernel; // Working filter memory
+	MedfiltNode *oldest; // Reference to the oldest value in the kernel
 	size_t length; // Number of nodes
-} MedianData;
+} MedfiltData;
 
-void median_init(MedianData *data, Node *nodes, size_t length);
-void median(float input, MedianData *data, float *median, float *min, float *max);
+void median_init(MedfiltData *data, MedfiltNode *nodes, size_t length);
+void median(float input, MedfiltData *data, float *median, float *min, float *max);

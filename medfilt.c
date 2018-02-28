@@ -4,12 +4,12 @@
  */
 #include <stdint.h>
 #include <stdlib.h>
-#include "moving_median.h"
+#include "medfilt.h"
 
-static void swap(Node **a, Node **b)
+static void swap(MedfiltNode **a, MedfiltNode **b)
 {
 	// Swap two node references in the sorted table.
-	Node *temp = *a;
+	MedfiltNode *temp = *a;
 	*a = *b;
 	*b = temp;
 
@@ -19,11 +19,11 @@ static void swap(Node **a, Node **b)
 	(*b)->index = index;
 }
 
-void median(float input, MedianData *data, float *median, float *min, float *max)
+void median(float input, MedfiltData *data, float *median, float *min, float *max)
 {
 	// New value replaces the oldest
-	Node *n = data->kernel;
-	Node *node = data->oldest;
+	MedfiltNode *n = data->kernel;
+	MedfiltNode *node = data->oldest;
 	node->value = input;
 	data->oldest = node->parent;
 
@@ -43,7 +43,7 @@ void median(float input, MedianData *data, float *median, float *min, float *max
 	*median = n[data->length / 2].sorted->value;
 }
 
-void median_init(MedianData *data, Node *nodes, size_t length)
+void median_init(MedfiltData *data, MedfiltNode *nodes, size_t length)
 {
 	data->kernel = nodes;
 	data->length = length;
@@ -51,7 +51,7 @@ void median_init(MedianData *data, Node *nodes, size_t length)
 	// Linked list initialization
 	data->oldest = &data->kernel[length - 1];
 	for (size_t i = 0; i < length; data->oldest = &data->kernel[i], i++) {
-		data->kernel[i] = (Node) {
+		data->kernel[i] = (MedfiltNode) {
 			.value = 0,
 			.parent = data->oldest,
 			.index = i,

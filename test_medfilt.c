@@ -3,9 +3,9 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "moving_median.h"
+#include "medfilt.h"
 
-static void kernel2str(MedianData *data)
+static void kernel2str(MedfiltData *data)
 {
 	printf("[ ");
 	for (size_t i = 0; i < data->length; i++) {
@@ -14,7 +14,7 @@ static void kernel2str(MedianData *data)
 	printf("]");
 }
 
-static void display(MedianData *data, size_t i, int in, int min, int mid, int max) {
+static void display(MedfiltData *data, size_t i, int in, int min, int mid, int max) {
 	printf("u[%d] = %d -> min=%d mid=%d max=%d kernel=", (int)i, in, min, mid, max);
 	kernel2str(data);
 	printf("\n");
@@ -25,18 +25,17 @@ static void display(MedianData *data, size_t i, int in, int min, int mid, int ma
 
 int main(void)
 {
-	const int input[] = { 3, 1, 6, 5, 7, 8, 9, 0, 1 };
+	const int in[] = { 3, 1, 6, 5, 7, 8, 9, 0, 1 };
 
-	MedianData data;
-	struct Node nodes[KERNEL];
+	MedfiltData data;
+	MedfiltNode nodes[KERNEL];
 	median_init(&data, nodes, KERNEL);
 
-	for (size_t i = 0; i < sizeof(input) / sizeof(input[0]); i++) {
+	for (size_t i = 0; i < sizeof(in) / sizeof(in[0]); i++) {
 		float min, mid, max;
-		median(input[i], &data, &mid, &min, &max);
-		display(&data, i, input[i], (int)min, (int)mid, (int)max);
+		median(in[i], &data, &mid, &min, &max);
+		display(&data, i, in[i], (int)min, (int)mid, (int)max);
 	}
-	getchar();
 
 	return EXIT_SUCCESS;
 }

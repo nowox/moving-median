@@ -1,16 +1,20 @@
 CFLAGS=-std=c99 -Wall -O2
-COBJS=moving_median.o
+LIB=medfilt
+COBJS=$(LIB).o
 
 all: test
 
 %.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
 
-libmedfilt.a: $(COBJS)
+lib$(LIB).a: $(COBJS)
 	$(AR) rc $@ $^
 
-test: test_moving_median.o
-	$(CC) $^ -o $@ -lmedfilt -L.
+test: test_$(LIB).o | lib$(LIB).a
+	$(CC) $^ -o $@ -l$(LIB) -L.
 
 run: test
 	./test
+
+clean:
+	$(RM) *.o *.a *.exe
