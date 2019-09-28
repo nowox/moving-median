@@ -30,11 +30,14 @@ void medfilt(MedfiltData *data, float input, float *median, float *min, float *m
 #   define VAL(x) (n[x].sorted->value)
 
     // Sort the kernel
+
+    // Check neigbhour to the right
     for (size_t i = node->index; i < data->length - 1 && VAL(i) > VAL(i + 1); i++) {
         swap(&n[i].sorted, &n[i + 1].sorted);
     }
 
-    for (size_t i = node->index; i > 0 && VAL(i) < VAL(i - 1); i++) {
+    // Check neigbhour to the left
+    for (size_t i = node->index; i > 0 && VAL(i) < VAL(i - 1); i--) {
         swap(&n[i].sorted, &n[i - 1].sorted);
     }
 
