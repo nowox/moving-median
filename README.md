@@ -16,11 +16,11 @@ int main(void)
     MedfiltData data;
     MedfiltNode nodes[KERNEL];
 
-    medfilt_init(&data, nodes, NAN, KERNEL);
+    medfilt_init(&data, nodes, KERNEL, NAN);
 
     for (size_t i = 0; i < sizeof(in) / sizeof(in[0]); i++) {
         float min, mid, max;
-        medfilt(in[i], &data, &mid, &min, &max);
+        medfilt(&data, in[i], &mid, &min, &max);
     }
 
     return EXIT_SUCCESS;
